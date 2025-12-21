@@ -92,8 +92,9 @@ public partial class MainWindowViewModel : ViewModelBase
             await _journalService.CreateOrUpdateEntryAsync(entry);
             StatusMessage = "Entry saved successfully! ✓";
             
-            // Clear status after 3 seconds
-            await Task.Delay(3000);
+            // Clear status after a delay
+            const int statusMessageDelayMs = 3000;
+            await Task.Delay(statusMessageDelayMs);
             StatusMessage = string.Empty;
         }
         catch (Exception ex)
