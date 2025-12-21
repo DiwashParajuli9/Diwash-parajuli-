@@ -1,19 +1,62 @@
-Chatbot Tutor Internship Project
+# My Daily Journal - CS6004NT Coursework
 
-Overview
+## Application Development - Milestone 1
 
-This repository contains the deliverables for Week 1 of the Chatbot Tutor Internship project, focused on building foundational skills for a conversational AI chatbot. The tasks include setting up a development environment, refreshing Python fundamentals, gaining proficiency in essential AI/ML libraries, and understanding key concepts in conversational AI and Large Language Models (LLMs).
+This repository contains the coursework submission for CS6004NT Application Development module.
 
-Week 1 Deliverables
+### Project: Personal Journal Desktop Application
 
-The following tasks were completed as part of Week 1: Environment Setup: Created a virtual environment using Python 3.11+. Installed and configured Visual Studio Code as the IDE with Python and Jupyter extensions. Initialized a Git repository and set up GitHub for collaborative workflow (branching and pull requests).
+A secure, feature-rich desktop application for daily journaling with mood tracking, built using C#.NET and Avalonia UI.
 
-Python Fundamentals: Reviewed data structures (lists, dictionaries, sets, tuples) with examples in data_structures.py. Implemented Object-Oriented Programming (OOP) concepts (classes, inheritance) in oop.py. Practiced asynchronous programming using asyncio in async_example.py, with adaptations for Jupyter compatibility. AI/ML Libraries: Installed and demonstrated proficiency in NumPy, Pandas, Matplotlib, and Seaborn. Created a Jupyter notebook (AnkitDhakal Log1.ipynb) with examples of array operations, DataFrame manipulation, and data visualization.
+### Milestone 1 Deliverables (Week 9) ✅
 
-Conceptual Overview: Researched conversational AI and LLM memory needs.
+1. **✅ Git Repository Initialized** - Private repository with .NET project structure
+2. **✅ Project Documentation** - Complete project overview, UI design, data modelling, and technology stack
+3. **✅ Features Implemented** (2/2 required):
+   - **Feature 1:** Journal Entry Management (Create, Update, Delete daily entries)
+   - **Feature 2:** Mood Tracking (Primary mood selection with 15 predefined moods)
 
-Deliverables: Initialized GitHub repository with this README. Python scripts (data_structures, oop, async_example). Jupyter notebook showcasing library usage.
+### Technology Stack
 
-Challenges and Resolutions Async Error: Encountered RuntimeError: asyncio.run() cannot be called from a running event loop in Jupyter. Resolved by using await main() or loop.create_task(main()) for notebook compatibility (see week1_libraries.ipynb).
+- **Framework:** Avalonia UI 11.3.10 (Cross-platform .NET MVVM framework)
+- **Database:** SQLite with Entity Framework Core 9.0.0
+- **Architecture:** MVVM (Model-View-ViewModel)
+- **Language:** C# (.NET 9.0)
 
-Next Steps Deepen AI/ML library proficiency with more complex data analysis in Week 2. Continue researching conversational AI frameworks and LLM architectures.
+### Quick Start
+
+```bash
+cd JournalApp
+dotnet restore
+dotnet build
+dotnet run
+```
+
+### Project Structure
+
+```
+├── JournalApp/           # Main application project
+│   ├── Data/            # Database context
+│   ├── Models/          # Entity models
+│   ├── Services/        # Business logic
+│   ├── ViewModels/      # View models (MVVM)
+│   ├── Views/           # UI views (XAML)
+│   └── README.md        # Detailed project documentation
+└── README.md            # This file
+```
+
+### Documentation
+
+For complete project documentation, see [JournalApp/README.md](JournalApp/README.md)
+
+**Student:** Diwash Parajuli  
+**Module:** CS6004NT - Application Development  
+**Submission:** Week 14 (January 28, 2026)  
+**Coursework Type:** Individual (100% contribution)
+
+---
+
+### Academic Integrity Statement
+
+This project is my original work. All external resources, libraries, and code snippets have been properly attributed. I understand the consequences of plagiarism and contract cheating as outlined in the coursework guidelines.
+

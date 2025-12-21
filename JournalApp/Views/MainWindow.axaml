@@ -1,0 +1,95 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:JournalApp.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="JournalApp.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="My Daily Journal">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="My Daily Journal" 
+                   FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" Margin="0,0,0,20"/>
+        
+        <!-- Date Display -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+            <TextBlock Text="Today: " FontSize="16"/>
+            <TextBlock Text="{Binding CurrentDate}" FontSize="16" FontWeight="SemiBold"/>
+        </StackPanel>
+        
+        <!-- Entry Form -->
+        <ScrollViewer Grid.Row="2">
+            <StackPanel Spacing="10">
+                <!-- Title Input -->
+                <TextBlock Text="Title (Optional):" FontWeight="SemiBold"/>
+                <TextBox Text="{Binding EntryTitle}" Watermark="Enter a title for today's entry..."/>
+                
+                <!-- Mood Selection -->
+                <TextBlock Text="How are you feeling? (Primary Mood)*" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                <ComboBox ItemsSource="{Binding Moods}" 
+                          SelectedItem="{Binding SelectedPrimaryMood}"
+                          PlaceholderText="Select your primary mood">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Emoji}" Margin="0,0,5,0"/>
+                                <TextBlock Text="{Binding Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                
+                <!-- Content -->
+                <TextBlock Text="What's on your mind?*" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                <TextBox Text="{Binding EntryContent}" 
+                         AcceptsReturn="True" 
+                         TextWrapping="Wrap"
+                         Height="200"
+                         Watermark="Write about your day..."/>
+                
+                <!-- Word Count -->
+                <TextBlock Text="{Binding WordCountText}" 
+                           FontSize="12" 
+                           Foreground="Gray"
+                           HorizontalAlignment="Right"/>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" 
+                    HorizontalAlignment="Center" 
+                    Spacing="10" Margin="0,20,0,0">
+            <Button Content="Save Entry" 
+                    Command="{Binding SaveEntryCommand}"
+                    Width="120" Height="35"
+                    Background="#4CAF50" Foreground="White"/>
+            <Button Content="Clear" 
+                    Command="{Binding ClearCommand}"
+                    Width="120" Height="35"/>
+        </StackPanel>
+        
+        <!-- Status Message -->
+        <TextBlock Grid.Row="4" 
+                   Text="{Binding StatusMessage}" 
+                   HorizontalAlignment="Center"
+                   Margin="0,10,0,0"
+                   FontWeight="SemiBold"/>
+    </Grid>
+
+</Window>
