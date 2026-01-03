@@ -32,6 +32,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private Mood? _selectedPrimaryMood;
     
+    [ObservableProperty]
+    private Mood? _selectedSecondaryMood1;
+    
+    [ObservableProperty]
+    private Mood? _selectedSecondaryMood2;
+    
+    [ObservableProperty]
+    private ObservableCollection<Tag> _availableTags = new();
+    
+    [ObservableProperty]
+    private ObservableCollection<Tag> _selectedTags = new();
+    
+    [ObservableProperty]
+    private ObservableCollection<JournalEntry> _allEntries = new();
+    
     public string WordCountText => $"Word count: {CalculateWordCount()}";
     
     public MainWindowViewModel()
@@ -48,6 +63,14 @@ public partial class MainWindowViewModel : ViewModelBase
             var moods = await _journalService.GetAllMoodsAsync();
             Moods = new ObservableCollection<Mood>(moods);
             
+            // Load tags
+            var tags = await _journalService.GetAllTagsAsync();
+            AvailableTags = new ObservableCollection<Tag>(tags);
+            
+            // Load all entries for the list view
+            var entries = await _journalService.GetAllEntriesAsync();
+            AllEntries = new ObservableCollection<JournalEntry>(entries.OrderByDescending(e => e.Date).Take(20));
+            
             // Load today's entry if it exists
             var todayEntry = await _journalService.GetEntryByDateAsync(DateTime.Now);
             if (todayEntry != null)
@@ -55,6 +78,20 @@ public partial class MainWindowViewModel : ViewModelBase
                 EntryTitle = todayEntry.Title;
                 EntryContent = todayEntry.Content;
                 SelectedPrimaryMood = Moods.FirstOrDefault(m => m.Id == todayEntry.PrimaryMoodId);
+                SelectedSecondaryMood1 = todayEntry.SecondaryMood1Id.HasValue 
+                    ? Moods.FirstOrDefault(m => m.Id == todayEntry.SecondaryMood1Id.Value) 
+                    : null;
+                SelectedSecondaryMood2 = todayEntry.SecondaryMood2Id.HasValue 
+                    ? Moods.FirstOrDefault(m => m.Id == todayEntry.SecondaryMood2Id.Value) 
+                    : null;
+                
+                // Load selected tags
+                SelectedTags.Clear();
+                foreach (var tag in todayEntry.Tags)
+                {
+                    SelectedTags.Add(tag);
+                }
+                
                 StatusMessage = "Loaded today's entry";
             }
         }
@@ -86,8 +123,16 @@ public partial class MainWindowViewModel : ViewModelBase
                 Date = DateTime.Now,
                 Title = EntryTitle,
                 Content = EntryContent,
-                PrimaryMoodId = SelectedPrimaryMood.Id
+                PrimaryMoodId = SelectedPrimaryMood.Id,
+                SecondaryMood1Id = SelectedSecondaryMood1?.Id,
+                SecondaryMood2Id = SelectedSecondaryMood2?.Id
             };
+            
+            // Add selected tags
+            foreach (var tag in SelectedTags)
+            {
+                entry.Tags.Add(tag);
+            }
             
             await _journalService.CreateOrUpdateEntryAsync(entry);
             StatusMessage = "Entry saved successfully! ✓";
@@ -109,7 +154,25 @@ public partial class MainWindowViewModel : ViewModelBase
         EntryTitle = string.Empty;
         EntryContent = string.Empty;
         SelectedPrimaryMood = null;
+        SelectedSecondaryMood1 = null;
+        SelectedSecondaryMood2 = null;
+        SelectedTags.Clear();
         StatusMessage = "Form cleared";
+    }
+    
+    [RelayCommand]
+    private void AddTag(Tag tag)
+    {
+        if (!SelectedTags.Contains(tag))
+        {
+            SelectedTags.Add(tag);
+        }
+    }
+    
+    [RelayCommand]
+    private void RemoveTag(Tag tag)
+    {
+        SelectedTags.Remove(tag);
     }
     
     private int CalculateWordCount()

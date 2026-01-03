@@ -3,7 +3,7 @@
         xmlns:vm="using:JournalApp.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
         x:Class="JournalApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -13,83 +13,218 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        
-        <!-- Title -->
-        <TextBlock Grid.Row="0" Text="My Daily Journal" 
-                   FontSize="24" FontWeight="Bold" 
-                   HorizontalAlignment="Center" Margin="0,0,0,20"/>
-        
-        <!-- Date Display -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-            <TextBlock Text="Today: " FontSize="16"/>
-            <TextBlock Text="{Binding CurrentDate}" FontSize="16" FontWeight="SemiBold"/>
-        </StackPanel>
-        
-        <!-- Entry Form -->
-        <ScrollViewer Grid.Row="2">
-            <StackPanel Spacing="10">
-                <!-- Title Input -->
-                <TextBlock Text="Title (Optional):" FontWeight="SemiBold"/>
-                <TextBox Text="{Binding EntryTitle}" Watermark="Enter a title for today's entry..."/>
+    <TabControl Margin="10">
+        <!-- New Entry Tab -->
+        <TabItem Header="✍ New Entry">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 
-                <!-- Mood Selection -->
-                <TextBlock Text="How are you feeling? (Primary Mood)*" FontWeight="SemiBold" Margin="0,10,0,0"/>
-                <ComboBox ItemsSource="{Binding Moods}" 
-                          SelectedItem="{Binding SelectedPrimaryMood}"
-                          PlaceholderText="Select your primary mood">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Emoji}" Margin="0,0,5,0"/>
-                                <TextBlock Text="{Binding Name}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <!-- Title -->
+                <TextBlock Grid.Row="0" Text="My Daily Journal" 
+                           FontSize="24" FontWeight="Bold" 
+                           HorizontalAlignment="Center" Margin="0,0,0,20"/>
                 
-                <!-- Content -->
-                <TextBlock Text="What's on your mind?*" FontWeight="SemiBold" Margin="0,10,0,0"/>
-                <TextBox Text="{Binding EntryContent}" 
-                         AcceptsReturn="True" 
-                         TextWrapping="Wrap"
-                         Height="200"
-                         Watermark="Write about your day..."/>
+                <!-- Date Display -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <TextBlock Text="Today: " FontSize="16"/>
+                    <TextBlock Text="{Binding CurrentDate}" FontSize="16" FontWeight="SemiBold"/>
+                </StackPanel>
                 
-                <!-- Word Count -->
-                <TextBlock Text="{Binding WordCountText}" 
-                           FontSize="12" 
-                           Foreground="Gray"
-                           HorizontalAlignment="Right"/>
-            </StackPanel>
-        </ScrollViewer>
+                <!-- Entry Form -->
+                <ScrollViewer Grid.Row="2">
+                    <StackPanel Spacing="10">
+                        <!-- Title Input -->
+                        <TextBlock Text="Title (Optional):" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding EntryTitle}" Watermark="Enter a title for today's entry..."/>
+                        
+                        <!-- Primary Mood Selection -->
+                        <TextBlock Text="How are you feeling? (Primary Mood)*" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                        <ComboBox ItemsSource="{Binding Moods}" 
+                                  SelectedItem="{Binding SelectedPrimaryMood}"
+                                  PlaceholderText="Select your primary mood">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Emoji}" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        
+                        <!-- Secondary Moods -->
+                        <TextBlock Text="Secondary Moods (Optional - up to 2):" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <ComboBox ItemsSource="{Binding Moods}" 
+                                      SelectedItem="{Binding SelectedSecondaryMood1}"
+                                      PlaceholderText="Secondary mood 1"
+                                      Width="200">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Emoji}" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <ComboBox ItemsSource="{Binding Moods}" 
+                                      SelectedItem="{Binding SelectedSecondaryMood2}"
+                                      PlaceholderText="Secondary mood 2"
+                                      Width="200">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Emoji}" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        
+                        <!-- Tags Section -->
+                        <TextBlock Text="Tags (Optional):" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                        <TextBlock Text="Selected Tags:" FontSize="12" Foreground="Gray"/>
+                        <ItemsControl ItemsSource="{Binding SelectedTags}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#E3F2FD" 
+                                            CornerRadius="12" 
+                                            Padding="8,4" 
+                                            Margin="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <TextBlock Text="{Binding Name}" FontSize="12"/>
+                                            <Button Content="×" 
+                                                    Command="{Binding $parent[Window].DataContext.RemoveTagCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="Transparent"
+                                                    Padding="2"
+                                                    FontSize="14"
+                                                    FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        
+                        <TextBlock Text="Available Tags (click to add):" FontSize="12" Foreground="Gray" Margin="0,5,0,0"/>
+                        <ScrollViewer MaxHeight="100">
+                            <ItemsControl ItemsSource="{Binding AvailableTags}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}"
+                                                Command="{Binding $parent[Window].DataContext.AddTagCommand}"
+                                                CommandParameter="{Binding}"
+                                                Background="#F5F5F5"
+                                                Padding="8,4"
+                                                Margin="4"
+                                                FontSize="12"
+                                                CornerRadius="12"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        
+                        <!-- Content -->
+                        <TextBlock Text="What's on your mind?*" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                        <TextBox Text="{Binding EntryContent}" 
+                                 AcceptsReturn="True" 
+                                 TextWrapping="Wrap"
+                                 Height="150"
+                                 Watermark="Write about your day..."/>
+                        
+                        <!-- Word Count -->
+                        <TextBlock Text="{Binding WordCountText}" 
+                                   FontSize="12" 
+                                   Foreground="Gray"
+                                   HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </ScrollViewer>
+                
+                <!-- Action Buttons -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            Spacing="10" Margin="0,20,0,0">
+                    <Button Content="Save Entry" 
+                            Command="{Binding SaveEntryCommand}"
+                            Width="120" Height="35"
+                            Background="#4CAF50" Foreground="White"/>
+                    <Button Content="Clear" 
+                            Command="{Binding ClearCommand}"
+                            Width="120" Height="35"/>
+                </StackPanel>
+                
+                <!-- Status Message -->
+                <TextBlock Grid.Row="4" 
+                           Text="{Binding StatusMessage}" 
+                           HorizontalAlignment="Center"
+                           Margin="0,10,0,0"
+                           FontWeight="SemiBold"/>
+            </Grid>
+        </TabItem>
         
-        <!-- Action Buttons -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" 
-                    HorizontalAlignment="Center" 
-                    Spacing="10" Margin="0,20,0,0">
-            <Button Content="Save Entry" 
-                    Command="{Binding SaveEntryCommand}"
-                    Width="120" Height="35"
-                    Background="#4CAF50" Foreground="White"/>
-            <Button Content="Clear" 
-                    Command="{Binding ClearCommand}"
-                    Width="120" Height="35"/>
-        </StackPanel>
-        
-        <!-- Status Message -->
-        <TextBlock Grid.Row="4" 
-                   Text="{Binding StatusMessage}" 
-                   HorizontalAlignment="Center"
-                   Margin="0,10,0,0"
-                   FontWeight="SemiBold"/>
-    </Grid>
+        <!-- Journal List Tab -->
+        <TabItem Header="📚 My Entries">
+            <ScrollViewer>
+                <StackPanel Margin="20" Spacing="10">
+                    <TextBlock Text="My Journal Entries" FontSize="20" FontWeight="Bold"/>
+                    <TextBlock Text="Click on an entry to view details" FontSize="12" Foreground="Gray"/>
+                    
+                    <!-- Entries List -->
+                    <ItemsControl ItemsSource="{Binding AllEntries}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#F9F9F9" 
+                                        CornerRadius="8" 
+                                        Padding="15" 
+                                        Margin="0,0,0,10"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1">
+                                    <StackPanel Spacing="5">
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <TextBlock Text="{Binding Date, StringFormat='{}{0:MMM dd, yyyy}'}" 
+                                                       FontWeight="Bold" 
+                                                       FontSize="14"/>
+                                            <TextBlock Text="{Binding Title}" 
+                                                       FontStyle="Italic" 
+                                                       Foreground="Gray"/>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding Content}" 
+                                                   TextTrimming="CharacterEllipsis" 
+                                                   MaxLines="2"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <TextBlock Text="Mood:" FontSize="11" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding PrimaryMood.Emoji}" FontSize="11"/>
+                                            <TextBlock Text="{Binding PrimaryMood.Name}" FontSize="11" Foreground="Gray"/>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding WordCount, StringFormat='Words: {0}'}" 
+                                                   FontSize="11" 
+                                                   Foreground="Gray"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+    </TabControl>
 
 </Window>
