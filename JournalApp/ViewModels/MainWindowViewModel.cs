@@ -47,6 +47,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<JournalEntry> _allEntries = new();
     
+    [ObservableProperty]
+    private ObservableCollection<JournalEntry> _monthEntries = new();
+    
+    [ObservableProperty]
+    private int _currentMonth = DateTime.Today.Month;
+    
+    [ObservableProperty]
+    private int _currentYear = DateTime.Today.Year;
+    
+    public string CurrentMonthYear => new DateTime(CurrentYear, CurrentMonth, 1).ToString("MMMM yyyy");
+    
     public string WordCountText => $"Word count: {CalculateWordCount()}";
     
     public MainWindowViewModel()
@@ -70,6 +81,9 @@ public partial class MainWindowViewModel : ViewModelBase
             // Load all entries for the list view
             var entries = await _journalService.GetAllEntriesAsync();
             AllEntries = new ObservableCollection<JournalEntry>(entries.OrderByDescending(e => e.Date).Take(20));
+            
+            // Load entries for current month (calendar view)
+            LoadMonthEntries();
             
             // Load today's entry if it exists
             var todayEntry = await _journalService.GetEntryByDateAsync(DateTime.Now);
@@ -99,6 +113,16 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             StatusMessage = $"Error loading data: {ex.Message}";
         }
+    }
+    
+    private void LoadMonthEntries()
+    {
+        var entriesForMonth = AllEntries
+            .Where(e => e.Date.Month == CurrentMonth && e.Date.Year == CurrentYear)
+            .OrderByDescending(e => e.Date)
+            .ToList();
+        MonthEntries = new ObservableCollection<JournalEntry>(entriesForMonth);
+        OnPropertyChanged(nameof(CurrentMonthYear));
     }
     
     [RelayCommand]
@@ -173,6 +197,36 @@ public partial class MainWindowViewModel : ViewModelBase
     private void RemoveTag(Tag tag)
     {
         SelectedTags.Remove(tag);
+    }
+    
+    [RelayCommand]
+    private void PreviousMonth()
+    {
+        if (CurrentMonth == 1)
+        {
+            CurrentMonth = 12;
+            CurrentYear--;
+        }
+        else
+        {
+            CurrentMonth--;
+        }
+        LoadMonthEntries();
+    }
+    
+    [RelayCommand]
+    private void NextMonth()
+    {
+        if (CurrentMonth == 12)
+        {
+            CurrentMonth = 1;
+            CurrentYear++;
+        }
+        else
+        {
+            CurrentMonth++;
+        }
+        LoadMonthEntries();
     }
     
     private int CalculateWordCount()

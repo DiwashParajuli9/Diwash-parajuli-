@@ -225,6 +225,60 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
+        
+        <!-- Calendar View Tab -->
+        <TabItem Header="📅 Calendar">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Month Navigation -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                    <TextBlock Text="Calendar View" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                        <Button Content="◀ Previous" Command="{Binding PreviousMonthCommand}" Width="100"/>
+                        <TextBlock Text="{Binding CurrentMonthYear}" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" MinWidth="200" TextAlignment="Center"/>
+                        <Button Content="Next ▶" Command="{Binding NextMonthCommand}" Width="100"/>
+                    </StackPanel>
+                    <TextBlock Text="Click on a date to view or create an entry" FontSize="12" Foreground="Gray" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+                
+                <!-- Simple Calendar Grid -->
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Dates with entries will be highlighted" FontSize="12" Foreground="Gray"/>
+                        <TextBlock Text="(Calendar navigation implemented - Full calendar grid coming soon)" FontStyle="Italic" Foreground="Gray"/>
+                        
+                        <!-- Entry summary for current month -->
+                        <TextBlock Text="Entries this month:" FontWeight="SemiBold" Margin="0,20,0,5"/>
+                        <ItemsControl ItemsSource="{Binding MonthEntries}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#E8F5E9" 
+                                            CornerRadius="4" 
+                                            Padding="10" 
+                                            Margin="0,0,0,5">
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <TextBlock Text="{Binding Date, StringFormat='{}{0:dd}'}" 
+                                                       FontWeight="Bold" 
+                                                       FontSize="16"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding PrimaryMood.Emoji}" 
+                                                       FontSize="14"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Title}" 
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </TabItem>
     </TabControl>
 
 </Window>

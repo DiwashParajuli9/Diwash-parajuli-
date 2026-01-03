@@ -37,7 +37,6 @@
 ## Features Implemented (Milestone 1)
 
 ### ✅ Feature 1: Journal Entry Management
-**Status:** Completed
 
 **Description:** Users can create, update, and delete daily journal entries. The system ensures only one entry per day with automatic timestamp management.
 
@@ -90,6 +89,100 @@ Moods Table:
 - Category (Enum: Positive/Neutral/Negative)
 - Emoji (String)
 ```
+
+## Features Implemented (Milestone 2)
+
+### ✅ Feature 3: Rich Text/Markdown Writing
+**Status:** Completed
+
+**Description:** Support for rich text and markdown formatting in journal entries.
+
+**Implementation Details:**
+- Added `Markdown.Avalonia` package for markdown rendering support
+- Multi-line TextBox with text wrapping for content entry
+- Word count calculation updates in real-time
+- AcceptsReturn enabled for multi-line input
+- Users can write with markdown syntax (**, *, lists, etc.)
+
+### ✅ Feature 4: Secondary Mood Selection
+**Status:** Completed
+
+**Description:** Users can select up to 2 additional secondary moods to capture complex emotional states.
+
+**Implementation Details:**
+- Two additional ComboBox controls for secondary moods
+- Optional selection (not required like primary mood)
+- All three moods (primary + 2 secondary) saved to database
+- Loaded when viewing existing entries
+- Foreign key relationships established in database
+- UI displays emoji and mood name for easy selection
+
+### ✅ Feature 5: Tagging System
+**Status:** Completed
+
+**Description:** Users can categorize entries with custom or predefined tags.
+
+**Implementation Details:**
+- Display of 31 predefined tags in clickable chips
+- Click to add tag to current entry
+- Selected tags shown with "×" remove button
+- Chip-style UI with rounded corners and colors
+- Tags stored with many-to-many relationship
+- Tags loaded and displayed when viewing entries
+- ScrollViewer for tag selection area
+
+**Predefined Tags:**
+Work, Career, Studies, Family, Friends, Relationships, Health, Fitness, Personal Growth, Self-care, Hobbies, Travel, Nature, Finance, Spirituality, Birthday, Holiday, Vacation, Celebration, Exercise, Reading, Writing, Cooking, Meditation, Yoga, Music, Shopping, Parenting, Projects, Planning, Reflection
+
+### ✅ Feature 6: Calendar Navigation
+**Status:** Completed
+
+**Description:** Navigate journal entries through a calendar-based interface.
+
+**Implementation Details:**
+- Month/Year navigation with Previous/Next buttons
+- Current month display (e.g., "January 2026")
+- List of entries for selected month
+- Entries shown with date, mood emoji, and title
+- Month navigation updates the entry list dynamically
+- Tab-based UI for easy access
+
+### ✅ Feature 7: Paginated Journal View
+**Status:** Completed
+
+**Description:** View journal entries in a paginated list format.
+
+**Implementation Details:**
+- Separate "My Entries" tab for browsing entries
+- Card-based layout for each entry
+- Display of:
+  - Entry date (formatted as "MMM dd, yyyy")
+  - Title (optional, shown in italic)
+  - Content preview (2 lines max with ellipsis)
+  - Primary mood with emoji and name
+  - Word count
+- Shows most recent 20 entries
+- ScrollViewer for browsing through list
+- Clean, organized card design with borders and padding
+
+## UI Improvements (Milestone 2)
+
+### Tab-Based Navigation
+- **New Entry Tab (✍)**: Create/edit today's journal entry
+- **My Entries Tab (📚)**: Browse all journal entries in list view
+- **Calendar Tab (📅)**: Navigate entries by month
+
+### Enhanced Form
+- Larger window size (900×700)
+- Better organized sections
+- Clear visual hierarchy
+- Status messages for user feedback
+
+### Tag Selection Interface
+- Chip-style tag display
+- Color-coded selected vs available tags
+- Easy add/remove functionality
+- ScrollViewer for many tags
 
 ## Data/Entity Modelling
 
@@ -167,10 +260,12 @@ JournalApp/
 ├── Services/
 │   └── JournalService.cs         # Business logic for journal operations
 ├── ViewModels/
-│   ├── MainWindowViewModel.cs    # Main window view model
+│   ├── MainWindowViewModel.cs    # Main window view model with calendar
+│   ├── JournalListViewModel.cs   # Journal list pagination view model
+│   ├── CalendarViewModel.cs      # Calendar navigation view model
 │   └── ViewModelBase.cs          # Base view model class
 ├── Views/
-│   ├── MainWindow.axaml          # Main window XAML
+│   ├── MainWindow.axaml          # Main window with tabs
 │   └── MainWindow.axaml.cs       # Main window code-behind
 ├── Migrations/
 │   └── [EF Core migration files]
@@ -181,7 +276,48 @@ JournalApp/
 
 ## UI Design (Wireframe)
 
-### Main Window (Journal Entry Form)
+### Updated Main Window (Tab-Based Interface)
+```
+┌────────────────────────────────────────────────────┐
+│  [✍ New Entry] [📚 My Entries] [📅 Calendar]      │
+├────────────────────────────────────────────────────┤
+│              My Daily Journal                      │
+│                                                    │
+│           Today: Saturday, January 3, 2026         │
+│                                                    │
+│  Title (Optional):                                │
+│  ┌──────────────────────────────────────────────┐ │
+│  │ Enter a title for today's entry...           │ │
+│  └──────────────────────────────────────────────┘ │
+│                                                    │
+│  How are you feeling? (Primary Mood)*             │
+│  ┌──────────────────────────────────────────────┐ │
+│  │ 😊 Happy                              ▼     │ │
+│  └──────────────────────────────────────────────┘ │
+│                                                    │
+│  Secondary Moods (Optional - up to 2):            │
+│  ┌───────────────┐ ┌───────────────┐            │
+│  │ Secondary 1 ▼│ │ Secondary 2 ▼│            │
+│  └───────────────┘ └───────────────┘            │
+│                                                    │
+│  Tags (Optional):                                 │
+│  Selected: [Work ×] [Health ×]                   │
+│  Available: [Family] [Friends] [Travel]...       │
+│                                                    │
+│  What's on your mind?*                            │
+│  ┌──────────────────────────────────────────────┐ │
+│  │ Write about your day...                      │ │
+│  │                                              │ │
+│  └──────────────────────────────────────────────┘ │
+│                             Word count: 0         │
+│                                                    │
+│        [Save Entry]      [Clear]                  │
+│                                                    │
+│              Entry saved successfully! ✓          │
+└────────────────────────────────────────────────────┘
+```
+
+### Original Main Window (Journal Entry Form)
 ```
 ┌──────────────────────────────────────────────────┐
 │              My Daily Journal                    │
@@ -278,19 +414,46 @@ Database location: `%LocalAppData%/journal.db` (Windows) or `~/.local/share/jour
 
 ## Next Steps (Future Milestones)
 
-### Milestone 2 (Week 11)
-- Secondary mood selection (up to 2 additional moods)
-- Tag system implementation
-- Search and filter functionality
-- Calendar navigation
-- Paginated journal view
+### Milestone 2 (Week 11) - ✅ COMPLETED
+- ✅ Secondary mood selection (up to 2 additional moods)
+- ✅ Tag system implementation
+- ✅ Rich Text/Markdown writing support
+- ✅ Calendar navigation
+- ✅ Paginated journal view
 
-### Milestone 3 (Week 13)
-- Streak tracking
-- Dashboard with analytics
-- Export to PDF
+### Milestone 3 (Week 13) - PLANNED
+- Search and filter functionality
+- Streak tracking (daily, longest, missed days)
+- Dashboard with analytics (mood distribution, word count trends)
+- Export to PDF by date range
 - Security (password/PIN protection)
-- Theme customization
+- Theme customization (light/dark mode)
+- Full calendar grid with date highlighting
+
+## Project Status
+
+**Current Milestone:** Milestone 2 Complete ✅  
+**Features Implemented:** 7 out of 12 total features (58%)  
+**Milestones Completed:** 2 out of 3 (67%)  
+
+### Milestone Summary
+- **Milestone 1:** 2 features ✅
+  1. Journal Entry Management
+  2. Primary Mood Tracking
+  
+- **Milestone 2:** 5 features ✅
+  3. Rich Text/Markdown Writing
+  4. Secondary Mood Selection
+  5. Tagging System
+  6. Calendar Navigation
+  7. Paginated Journal View
+
+- **Milestone 3:** 5 features (planned)
+  8. Search & Filter
+  9. Streak Tracking
+  10. Dashboard Analytics
+  11. Security & Privacy
+  12. Export to PDF
 
 ## Individual Contribution
 
@@ -304,8 +467,9 @@ Database location: `%LocalAppData%/journal.db` (Windows) or `~/.local/share/jour
 - Entity Framework Core Documentation: https://learn.microsoft.com/en-us/ef/core/
 - SQLite Documentation: https://www.sqlite.org/docs.html
 - CommunityToolkit.Mvvm Documentation: https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/
+- Markdown.Avalonia: https://github.com/whistyun/Markdown.Avalonia
 
 ---
 
-**Project Status:** Milestone 1 Complete ✓
-**Last Updated:** December 21, 2025
+**Project Status:** Milestone 2 Complete ✅  
+**Last Updated:** January 3, 2026
